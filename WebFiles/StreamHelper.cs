@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace FileManager
+namespace Cstieg.WebFiles
 {
     /// <summary>
     /// A helper class to add extensions to the Stream class

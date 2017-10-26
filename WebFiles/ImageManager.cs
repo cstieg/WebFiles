@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Web;
 
-namespace FileManager
+namespace Cstieg.WebFiles
 {
     /// <summary>
     /// A subclass of FileManager specifically handling images
@@ -50,9 +51,9 @@ namespace FileManager
         /// </summary>
         /// <param name="file">The image file derived from the POST request</param>
         /// <returns>The URL by which the image file is accessible</returns>
-        public new string SaveFile(HttpPostedFileBase file, bool timeStamped = true, string timeStamp = "")
+        public new async Task<string> SaveFile(HttpPostedFileBase file, string timeStamp = "")
         {
-            return SaveFile(file, null, timeStamped, timeStamp);
+            return await SaveFile(file, null, timeStamp);
         }
 
         /// <summary>
@@ -61,14 +62,14 @@ namespace FileManager
         /// <param name="file">The image file derived from the POST request</param>
         /// <param name="maxWidth">The maximum width the image in pixels</param>
         /// <returns>The URL by which the image file is accessible, including a -w### extension indicating image width</returns>
-        public string SaveFile(HttpPostedFileBase file, int? maxWidth, bool timeStamped = true, string timeStamp = "")
+        public async Task<string> SaveFile(HttpPostedFileBase file, int? maxWidth, string timeStamp = "")
         {
             if (_validImageTypes.Count() > 0 && !_validImageTypes.Contains(file.ContentType))
             {
                 throw new InvalidFileTypeException();
             }
 
-            return SaveFile(file.InputStream, file.FileName, maxWidth, timeStamped, timeStamp);
+            return await SaveFile(file.InputStream, file.FileName, maxWidth, timeStamp);
         }
 
         /// <summary>
@@ -78,9 +79,9 @@ namespace FileManager
         /// <param name="name">The name under which to save the images</param>
         /// <param name="maxWidth">The maximum width of the image in pixels</param>
         /// <returns>The URL by which the file is accessible</returns>
-        public string SaveFile(Stream stream, string name, int? maxWidth, bool timeStamped = true, string timeStamp = "")
+        public async Task<string> SaveFile(Stream stream, string name, int? maxWidth, string timeStamp = "")
         {
-            if (timeStamped)
+            if (timeStamp != "")
             {
                 // Timestamp the filename to prevent collisions
                 name = GetTimeStampedFileName(name, timeStamp);
@@ -100,7 +101,7 @@ namespace FileManager
             }
 
             // timeStamped = false, so not to double timestamp
-            return base.SaveFile(stream, name, false);
+            return await base.SaveFile(stream, name);
         }
 
         /// <summary>
@@ -109,9 +110,9 @@ namespace FileManager
         /// <param name="imageFile">The image file derived from a POST request</param>
         /// <param name="sizes">The list of image widths to be created</param>
         /// <returns>The URL by which the base file is accessible</returns>
-        public string SaveImageMultipleSizes(HttpPostedFileBase imageFile, List<int> sizes = null, bool timeStamped = true, string timeStamp = "")
+        public async Task<string> SaveImageMultipleSizes(HttpPostedFileBase imageFile, List<int> sizes = null, string timeStamp = "")
         {
-            return SaveImageMultipleSizes(imageFile.InputStream, imageFile.FileName, sizes, timeStamped, timeStamp);
+            return await SaveImageMultipleSizes(imageFile.InputStream, imageFile.FileName, sizes, timeStamp);
         }
 
         /// <summary>
@@ -121,9 +122,9 @@ namespace FileManager
         /// <param name="name">The base image name</param>
         /// <param name="sizes">The list of image widths to be created</param>
         /// <returns>The URL by which the base file is accessible</returns>
-        public string SaveImageMultipleSizes(Stream stream, string name, List<int> sizes = null, bool timeStamped = true, string timeStamp = "")
+        public async Task<string> SaveImageMultipleSizes(Stream stream, string name, List<int> sizes = null, string timeStamp = "")
         {
-            if (timeStamped)
+            if (timeStamp != "")
             {
                 // Timestamp the filename to prevent collisions
                 name = GetTimeStampedFileName(name, timeStamp);
@@ -146,7 +147,7 @@ namespace FileManager
             for (var i = 0; i < sizes.Count; i++)
             {
                 // timeStamped = false, so not to double timestamp
-                string url = SaveFile(memoryStream, name, sizes[i], false);
+                string url = await SaveFile(memoryStream, name, sizes[i]);
                 srcSetItems.Add(url + " " + sizes[i] + "w");
             }
 

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace FileManager
+namespace Cstieg.WebFiles
 {
     public class FileEmptyException : Exception
     {

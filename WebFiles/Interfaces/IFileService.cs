@@ -1,4 +1,4 @@
-﻿namespace FileManager
+﻿namespace Cstieg.WebFiles
 {
     public interface IFileService : IFileManager
     {

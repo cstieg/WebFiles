@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace FileManager
+namespace Cstieg.WebFiles
 {
     /// <summary>
     /// The exception that is thrown when the file being saved is of an invalid type

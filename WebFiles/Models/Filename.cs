@@ -1,4 +1,4 @@
-﻿namespace FileManager
+﻿namespace Cstieg.WebFiles
 {
     /// <summary>
     /// Represents a filename, allowing it to be broken down into its constituent components

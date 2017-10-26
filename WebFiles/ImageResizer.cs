@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Web.Helpers;
 
-namespace FileManager
+namespace Cstieg.WebFiles
 {
     /// <summary>
     /// A utility to resize image streams

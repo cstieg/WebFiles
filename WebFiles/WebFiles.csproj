@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{AD7CD57A-454C-47D1-A020-D0C643BAC267}</ProjectGuid>
+    <ProjectGuid>{5612C6E4-F55C-4120-B33D-BCFCC2BDA4BD}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>FileManager</RootNamespace>
@@ -29,10 +29,22 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>FileManager.pfx</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity" />
     <Reference Include="System.Web" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=4.0.0.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -41,20 +53,26 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FileEmptyException.cs" />
+    <Compile Include="Controllers\ProductControllerSample.cs" />
+    <Compile Include="Controllers\_ImageControllerHelper.cs" />
+    <Compile Include="Exceptions\FileEmptyException.cs" />
     <Compile Include="FileManager.cs" />
-    <Compile Include="Filename.cs" />
-    <Compile Include="Filepath.cs" />
+    <Compile Include="Models\Filename.cs" />
+    <Compile Include="Models\Filepath.cs" />
     <Compile Include="FileSystemService.cs" />
-    <Compile Include="IFileManager.cs" />
-    <Compile Include="IFileService.cs" />
+    <Compile Include="Interfaces\IFileManager.cs" />
+    <Compile Include="Interfaces\IFileService.cs" />
     <Compile Include="ImageManager.cs" />
     <Compile Include="ImageResizer.cs" />
-    <Compile Include="InvalidFileTypeException.cs" />
-    <Compile Include="ListHelper.cs" />
-    <Compile Include="NoDataException.cs" />
+    <Compile Include="Exceptions\InvalidFileTypeException.cs" />
+    <Compile Include="Exceptions\NoDataException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StreamHelper.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="FileManager.pfx" />
+    <None Include="packages.config" />
+    <None Include="Views\ViewSample.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

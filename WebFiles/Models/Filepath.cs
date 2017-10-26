@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace FileManager
+namespace Cstieg.WebFiles
 {
     /// <summary>
     /// Represents a Filepath, allowing it to be broken down into the folder path and file name

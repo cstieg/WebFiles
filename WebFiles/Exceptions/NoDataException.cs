@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace FileManager
+namespace Cstieg.WebFiles
 {
     /// <summary>
     /// The exception that is thrown when data that does not exist is attempted to be read

@@ -1,9 +1,9 @@
-﻿using ChristopherStieg.App_Start;
-using System;
+﻿using System;
 using System.IO;
+using System.Threading.Tasks;
 using System.Web;
 
-namespace FileManager
+namespace Cstieg.WebFiles
 {
     /// <summary>
     /// A wrapper for the default file storage service
@@ -18,19 +18,10 @@ namespace FileManager
         /// </summary>
         /// <param name="folder">The folder in which the files are to be saved</param>
         /// <param name="storageService">An IFileService object to serve as the storage service</param>
-        public FileManager(string folder, IFileService storageService = null)
+        public FileManager(string folder, IFileService storageService)
         {
             _folder = folder;
-
-            // Get default storage service from RouteConfig if not specifically provided
-            if (storageService == null)
-            {
-                _storageService = ContainerConfig.storageService;
-            }
-            else
-            {
-                _storageService = storageService;
-            }
+            _storageService = storageService;
             _storageService.SetFolder(folder);
         }
 
@@ -44,14 +35,14 @@ namespace FileManager
         /// </summary>
         /// <param name="file">The file to be saved, derived from a POST request</param>
         /// <returns>The URL by which the saved file is accessible</returns>
-        public string SaveFile(HttpPostedFileBase file, bool timeStamped = true, string timeStamp = "")
+        public async Task<string> SaveFile(HttpPostedFileBase file, string timeStamp = "")
         {
             if (file.InputStream.Length == 0)
             {
                 throw new NoDataException("There is no data in this stream!");
             }
 
-            return SaveFile(file.InputStream, file.FileName, timeStamped, timeStamp);
+            return await SaveFile(file.InputStream, file.FileName, timeStamp);
         }
 
         /// <summary>
@@ -60,9 +51,9 @@ namespace FileManager
         /// <param name="stream">The stream containing the file data to be saved</param>
         /// <param name="name">The filename by which to save the file</param>
         /// <returns></returns>
-        public string SaveFile(Stream stream, string name, bool timeStamped = true, string timeStamp = "")
+        public async Task<string> SaveFile(Stream stream, string name, string timeStamp = "")
         {
-            if (timeStamped)
+            if (timeStamp != "")
             {
                 // Timestamp the filename to prevent collisions
                 name = GetTimeStampedFileName(name, timeStamp);
@@ -76,7 +67,7 @@ namespace FileManager
             // Replace spaces with underscores for HTML access
             name = name.Replace(' ', '_');
 
-            return _storageService.SaveFile(stream, name);
+            return await _storageService.SaveFile(stream, name);
         }
 
         /// <summary>

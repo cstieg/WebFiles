@@ -1,7 +1,8 @@
 ﻿using System.IO;
+using System.Threading.Tasks;
 using System.Web.Hosting;
 
-namespace FileManager
+namespace Cstieg.WebFiles
 {
     /// <summary>
     /// A FileManager service that stores file to the server file system
@@ -51,7 +52,7 @@ namespace FileManager
         /// <param name="stream">The Stream object containing the file data to be saved</param>
         /// <param name="name">The filename under which to save the file</param>
         /// <returns>A URL by which the file can be accessed</returns>
-        public string SaveFile(Stream stream, string name, bool timeStamped = false, string timeStamp = "")
+        public async Task<string> SaveFile(Stream stream, string name, string timeStamp = "")
         {
             if (stream.Length == 0)
             {
@@ -62,7 +63,7 @@ namespace FileManager
             string fileUrl = BaseUrlPath + "/" + name;
             using (FileStream savingFile = File.Create(filePath))
             {
-                stream.CopyTo(savingFile);
+                await stream.CopyToAsync(savingFile);
             }
             return fileUrl;
         }
