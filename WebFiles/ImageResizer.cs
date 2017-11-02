@@ -1,4 +1,7 @@
-﻿using System.IO;
+﻿using System;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Web.Helpers;
 
 namespace Cstieg.WebFiles
@@ -18,6 +21,7 @@ namespace Cstieg.WebFiles
         public ImageResizer(Stream imageStream )
         {
             _webImage = new WebImage(imageStream.CloneToMemoryStream());
+            FixOrientation(imageStream.CloneToMemoryStream());
         }
 
         /// <summary>
@@ -75,6 +79,57 @@ namespace Cstieg.WebFiles
             return _webImage.Width;
         }
 
+        // Code adapted from ReenignE, https://stackoverflow.com/questions/6222053/problem-reading-jpeg-metadata-orientation
+        /// <summary>
+        /// Fixes the orientation of an image
+        /// </summary>
+        /// <param name="imageStream">Image stream of image to fix</param>
+        /// <returns>Fixed image stream</returns>
+        public void FixOrientation(Stream imageStream)
+        {
+            Image img = Image.FromStream(imageStream);
+            
+            if (Array.IndexOf(img.PropertyIdList, 274) > -1)
+            {
+                var orientation = (int)img.GetPropertyItem(274).Value[0];
+                switch (orientation)
+                {
+                    case 1:
+                        // No rotation required.
+                        return;
+                    case 2:
+                        _webImage = _webImage.FlipHorizontal();
+                        //img.RotateFlip(RotateFlipType.RotateNoneFlipX);
+                        break;
+                    case 3:
+                        _webImage = _webImage.RotateRight().RotateRight();
+                        //img.RotateFlip(RotateFlipType.Rotate180FlipNone);
+                        break;
+                    case 4:
+                        _webImage = _webImage.RotateRight().RotateRight().FlipHorizontal();
+                        //img.RotateFlip(RotateFlipType.Rotate180FlipX);
+                        break;
+                    case 5:
+                        _webImage = _webImage.RotateRight().FlipHorizontal();
+                        //img.RotateFlip(RotateFlipType.Rotate90FlipX);
+                        break;
+                    case 6:
+                        _webImage = _webImage.RotateRight();
+                        //img.RotateFlip(RotateFlipType.Rotate90FlipNone);
+                        break;
+                    case 7:
+                        _webImage = _webImage.RotateLeft().FlipHorizontal();
+                        //img.RotateFlip(RotateFlipType.Rotate270FlipX);
+                        break;
+                    case 8:
+                        _webImage = _webImage.RotateLeft();
+                        img.RotateFlip(RotateFlipType.Rotate270FlipNone);
+                        break;
+                }
+                // This EXIF data is now invalid and should be removed.
+                //img.RemovePropertyItem(274);
+            }
+        }
     }
 
     /// <summary>
